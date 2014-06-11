@@ -8,7 +8,8 @@
          simple-path?
          cycle?
          neighbours?
-         link
+         link/directed
+         link/undirected
          get-node
          followers
          following
@@ -38,13 +39,14 @@
 (define (neighbours? node-1 node-2)
   (set-member? (node-edges node-1) (node-label node-2)))
 
-(define (link/undirected node-1 node-2)
-  (values
-   (node (node-label node-1) (set-add (node-edges node-1) (node-label node-2)))
-   (node (node-label node-2) (set-add (node-edges node-2) (node-label node-1)))))
-
 (define (link/directed node-1 node-2)
   (node (node-label node-1) (set-add (node-edges node-1) (node-label node-2))))
+
+(define (link/undirected node-1 node-2)
+  (values
+   (link/directed node-1 node-2)
+   (link/directed node-2 node-1)))
+
 
 (define (path? network)
   (cond
@@ -67,10 +69,12 @@
 
 (define (get-node network label)
   (if (symbol? label)
-      (findf (λ (nd)
-               (equal? (node-label nd)
-                       label))
-             network)
+      (or
+       (findf (λ (nd)
+                (equal? (node-label nd)
+                        label))
+              network)
+       void)
       (error "Node labels must be symbols.")))
 
 (define (followers network node)
