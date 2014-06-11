@@ -11,6 +11,7 @@
          link/directed
          link/undirected
          get-node
+         get-node-map
          followers
          following
          sort-by-followers
@@ -76,6 +77,10 @@
               network)
        void)
       (error "Node labels must be symbols.")))
+
+(define (get-node-map network)
+  (λ (node)
+    (get-node network node)))
 
 (define (followers network node)
   (let ([nd (if (symbol? node)
