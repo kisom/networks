@@ -5,6 +5,7 @@
          node-label
          node-edges
          path?
+         path-length
          simple-path?
          cycle?
          neighbours?
@@ -57,6 +58,11 @@
     [(neighbours? (first network) (second network))
      (path? (rest network))]
     [else #f]))
+
+(define (path-length network)
+  (if (path? network)
+      (- (length network) 1)
+      0))
 
 (define (simple-path? network)
   (and (path? network)
