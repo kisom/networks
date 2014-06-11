@@ -5,13 +5,9 @@
 (provide bfs
          dfs
          connected?
-         minimise-path)
+         clean-path)
 
-(define (get-node-map network)
-  (λ (node)
-    (get-node network node)))
-
-(define (build-path nodes)
+(define (clean-path nodes)
   (define (path-search nodes path)
     (cond
       [(empty? nodes) '()]
@@ -81,7 +77,7 @@
                           (cons t path)))))))
     (let ([path (search (list start) '() '())])
       (if path
-          (build-path (map (λ (nd) (get-node network nd)) path))
+          (clean-path (map (λ (nd) (get-node network nd)) path))
           #f))))
 
 
@@ -110,7 +106,7 @@
                         (cons i path))))))
     (let ([path (search (list start) '() '())])
       (let ([path (map (get-node-map network) (reverse path))])
-        (build-path path)))))
+        (clean-path path)))))
 
 (define (node-connected? network node)
   (andmap (λ (o)
@@ -119,7 +115,6 @@
                         (equal? (node-label o)
                                 (node-label node)))
                       network)))
-
 
 (define (connected? network)
   (foldl (λ (x y)
